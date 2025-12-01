@@ -13,4 +13,4 @@ rot2 (s,z) (f, n) = (s+f n, z+dz) where
     dz = (m+n) `div` 100
     m = f s `mod` 100
 
-main = getContents >>= print . snd . foldl rot2 (50,0) . map readRot . lines
+main = print . snd . foldl rot2 (50,0) . map readRot . lines =<< getContents
