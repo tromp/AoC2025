@@ -1,16 +1,16 @@
-type I = (Int->Int, Int)
+type Rot = (Int->Int, Int)
+type State = (Int, Int, Int)
 
-readRot :: String -> I
+readRot :: String -> Rot
 readRot (d:s) =  (if d=='R' then id else negate, read s)
 
-rot1 :: (Int,Int) -> I -> (Int,Int)
-rot1 (s,z) (f, n) = (s', z+dz) where
-    s' = (s+f n) `mod` 100
-    dz = if s'==0 then 1 else 0
+go :: State -> Rot -> State
+go (dial,z1,z2) (f, n) = (dial', z1+dz1, z2+dz2) where
+    dial' = (dial + f n) `mod` 100
+    dz1 = if dial' == 0 then 1 else 0
+    dz2 = ((f dial `mod` 100) + n) `div` 100
 
-rot2 :: (Int,Int) -> I -> (Int,Int)
-rot2 (s,z) (f, n) = (s+f n, z+dz) where
-    dz = (m+n) `div` 100
-    m = f s `mod` 100
-
-main = print . snd . foldl rot2 (50,0) . map readRot . lines =<< getContents
+main = do
+  (_,z1,z2) <- return . foldl go (50,0,0) . map readRot . lines =<< getContents
+  print z1
+  print z2
